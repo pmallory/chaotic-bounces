@@ -34,6 +34,7 @@ def reflect(center, reflection_point, velocity):
     returns a 2 element vector
     """
     intermediate_value = center - reflection_point
+    v = velocity
     return v-((dot(2*v, intermediate_value))/(dot(intermediate_value, intermediate_value)))*intermediate_value
 
 def arrange_circles(side_length):
@@ -49,9 +50,34 @@ def generate_unit_vector():
     vector = random.random((1,2))
     return vector/norm(vector)
 
+def run_trial(circle_distance, circle_radius):
+    particle_position = array([0,0])
+    particle_velocity = generate_unit_vector()
+
+    circles = arrange_circles(circle_distance)
+
+    collision_list = [(particle_position, particle_velocity)]
+    
+    # the previously collided with circle. Don't check for collisions with it.
+    prev_circ = None
+
+    while True:
+        for circle in filter(lambda c: c!=prev_circ, circles):
+            t = intersect(circle, circle_radius,
+                          particle_position, particle_velocity)
+            if t:
+                new_position = particle_position + t*particle_velocity
+                new_velocity = reflect(circle, new_position, particle_velocity)
+                particle_position = new_position
+                particle_velocity = new_velocity
+                collision_list.append((new_position, new_position))
+                prev_circ = circle
+            else:
+                return collision_list
 
 if __name__ == '__main__':
     circle_distance = 6
     circle_radius = 1
 
-    u =  generate_unit_vector()
+    print run_trial(circle_distance, circle_radius)
+
