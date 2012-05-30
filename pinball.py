@@ -1,5 +1,7 @@
+import numpy
 from scipy import *
 from scipy.linalg import norm
+import turtle
 
 def intersect(center, radius, particle_location, particle_velocity):
     """Determine how soon a prticle will hit the circle.
@@ -39,21 +41,25 @@ def reflect(center, reflection_point, velocity):
 
 def arrange_circles(side_length):
     """Given a side length, return the coordinates of the three points of an
-       equilateral triangle centered on the origin."""
+       equilateral triangle centered on the origin.
+    """
     return [(side_length/2, -side_length*sqrt(3)/6),
             (-side_length/2, -side_length*sqrt(3)/6),
             (0, side_length*sqrt(3)/3)]
 
 def generate_unit_vector():
     """Generate a random (evenly distributed) unit vector. Used to seed a 
-        particle's velocity."""
-    vector = random.random((1,2))
+    particle's velocity.
+    """
+    vector = numpy.random.rand(2) # random values in [0.0, 1.0)
+    vector -= array([.5, .5])     # range is now [-0.5, 0.5)
     return vector/norm(vector)
 
 def run_trial(circle_distance, circle_radius):
     particle_position = array([0,0])
     particle_velocity = generate_unit_vector()
 
+    #TODO this should probably be passed in for the benefit of repeated trials.
     circles = arrange_circles(circle_distance)
 
     collision_list = [(particle_position, particle_velocity)]
