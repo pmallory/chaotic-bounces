@@ -76,14 +76,40 @@ def run_trial(circle_distance, circle_radius):
                 new_velocity = reflect(circle, new_position, particle_velocity)
                 particle_position = new_position
                 particle_velocity = new_velocity
-                collision_list.append((new_position, new_position))
+                collision_list.append((new_position, new_velocity))
                 prev_circ = circle
             else:
                 return collision_list
 
+def draw_trial(circle_distance, circle_radius, collision_list):
+    """Display a graphical representation of a trial.
+
+    All units multiplied by 10 for clarity.
+    """
+    turtle.penup()
+    turtle.hideturtle()
+    turtle.speed('fastest')
+
+    circles = arrange_circles(circle_distance)
+
+    # draw the circles
+    for circle in circles:
+        turtle.setpos(circle[0]*40, circle[1]*40)
+        turtle.dot(2*circle_radius*40)
+
+    # draw the particle's path
+    turtle.setpos(collision_list[0][0])
+    turtle.pendown()
+
+    for n in collision_list:
+        turtle.setpos(n[0]*40)
+        print n[0]*40
+
+    turtle.Screen().exitonclick()
+
 if __name__ == '__main__':
     circle_distance = 6
-    circle_radius = 1
+    circle_radius = 2
 
-    print run_trial(circle_distance, circle_radius)
-
+    result = run_trial(circle_distance, circle_radius)
+    draw_trial(circle_distance, circle_radius, result)
