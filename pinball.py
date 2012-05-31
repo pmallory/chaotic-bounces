@@ -55,12 +55,9 @@ def generate_unit_vector():
     vector -= array([.5, .5])     # range is now [-0.5, 0.5)
     return vector/norm(vector)
 
-def run_trial(circle_distance, circle_radius):
+def run_trial(circles, circle_radius):
     particle_position = array([0,0])
     particle_velocity = generate_unit_vector()
-
-    #TODO this should probably be passed in for the benefit of repeated trials.
-    circles = arrange_circles(circle_distance)
 
     collision_list = [(particle_position, particle_velocity)]
     
@@ -111,5 +108,11 @@ if __name__ == '__main__':
     circle_distance = 6
     circle_radius = 2
 
-    result = run_trial(circle_distance, circle_radius)
-    draw_trial(circle_distance, circle_radius, result)
+    circles = arrange_circles(circle_distance)
+
+    results = []
+    for i in range(10000):
+        results.append(run_trial(circles, circle_radius))
+
+#   draw_trial(circle_distance, circle_radius, max(results, key=len))
+
