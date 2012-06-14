@@ -48,7 +48,7 @@ def arrange_circles(side_length):
             (-side_length/2, -side_length*sqrt(3)/6),
             (0, side_length*sqrt(3)/3)]
 
-def generate_unit_vector():
+def random_unit_vector():
     """Generate a random (evenly distributed) unit vector. Used to seed a 
     particle's velocity.
     """
@@ -56,9 +56,16 @@ def generate_unit_vector():
     vector -= array([.5, .5])     # range is now [-0.5, 0.5)
     return vector/norm(vector)
 
+def ordered_unit_vectors(n):
+    """A generator that yields n evenly spaced unit vectors."""
+    increment_size = (2*pi)/n
+
+    for angle in arange(0, 2*pi, increment_size):
+        yield array([cos(angle), sin(angle)])
+
 def run_trial(circles, circle_radius):
     particle_position = array([0,0])
-    particle_velocity = generate_unit_vector()
+    particle_velocity = random_unit_vector()
 
     collision_list = [(particle_position, particle_velocity)]
     
