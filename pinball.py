@@ -63,9 +63,12 @@ def ordered_unit_vectors(n):
     for angle in arange(0, 2*pi, increment_size):
         yield array([cos(angle), sin(angle)])
 
-def run_trial(circles, circle_radius):
+def run_trial(circles, circle_radius, initial_velocity=None):
     particle_position = array([0,0])
-    particle_velocity = random_unit_vector()
+    if initial_velocity:
+        particle_velocity = initial_velocity
+    else:
+        particle_velocity = random_unit_vector()
 
     collision_list = [(particle_position, particle_velocity)]
     
