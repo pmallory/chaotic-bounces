@@ -1,3 +1,4 @@
+import sys
 import numpy
 from scipy import *
 from scipy.linalg import norm
@@ -100,7 +101,6 @@ def draw_trial(circle_distance, circle_radius, collision_list):
 
     for n in collision_list:
         turtle.setpos(n[0]*40)
-        print n[0]*40
 
     turtle.Screen().exitonclick()
 
@@ -108,11 +108,17 @@ if __name__ == '__main__':
     circle_distance = 6
     circle_radius = 2
 
+    trials = 10000
+
     circles = arrange_circles(circle_distance)
 
     results = []
-    for i in range(10000):
+    for i in range(trials):
         results.append(run_trial(circles, circle_radius))
+        sys.stdout.write('\r{0}% complete'.format(100*i/float(trials)))
+        sys.stdout.flush()
+    
+    sys.stdout.write('\r100% complete\n')
 
-#   draw_trial(circle_distance, circle_radius, max(results, key=len))
+    draw_trial(circle_distance, circle_radius, max(results, key=len))
 
