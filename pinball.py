@@ -56,7 +56,7 @@ def random_unit_vector():
     """Generate a random (evenly distributed) unit vector. Used to seed a 
     particle's velocity.
     """
-    angle = rand()*2*pi
+    angle = numpy.random.uniform(0, 2*pi) 
     return array([cos(angle), sin(angle)])
 
 
@@ -194,7 +194,7 @@ if __name__ == '__main__':
             results.remove(min(results, key=len))
 
         # count how many times this number of bounces has happened
-        counter[len(result)-1] += 1
+        counter[len(result)-2] += 1
 
         # progress indicator
         sys.stdout.write('\r{0}% complete'.format(100*i/float(trials)))
