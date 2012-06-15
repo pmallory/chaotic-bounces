@@ -1,7 +1,10 @@
 import sys
+import argparse
+
 import numpy
 from scipy import *
 from scipy.linalg import norm
+
 import turtle
 
 def intersect(center, radius, particle_location, particle_velocity):
@@ -115,20 +118,38 @@ def draw_trial(circle_distance, circle_radius, collision_list):
     turtle.Screen().exitonclick()
 
 if __name__ == '__main__':
-    circle_distance = 6
-    circle_radius = 2
+    parser = argparse.ArgumentParser(description='Model a smple chaotic system.')
 
-    trials = 10000
+    parser.add_argument('-d', '--distance', type=int, default=6, help='The distance \
+                        between the circles')
+    parser.add_argument('-r', '--radius', type=int, default=1, help='The radius \
+                        of each circle')
+    parser.add_argument('-t', '--trials', type=int, default=1000, help='How many \
+                        trials should be run')
+    parser.add_argument('-e', '--even', action='store_true', help='Use evenly \
+                        evenly spaced trial velocity. Random velocities used by \
+                        default.')
+
+    args = parser.parse_args()
+
+    circle_distance = args.distance
+    circle_radius = args.radius
+    trials = args.trials
+    if args.even:
+        angles = ordered_unit_vectors(trials)
 
     circles = arrange_circles(circle_distance)
 
     results = []
     for i in range(trials):
-        results.append(run_trial(circles, circle_radius))
+        if args.even:
+            results.append(run_trial(circles, circle_radius, angles.next()))
+        else:
+            results.append(run_trial(circles, circle_radius))
         sys.stdout.write('\r{0}% complete'.format(100*i/float(trials)))
         sys.stdout.flush()
-    
-    sys.stdout.write('\r100% complete\n')
+
+    sys.stdout.write('\r100% complete!\n')
 
     draw_trial(circle_distance, circle_radius, max(results, key=len))
 
