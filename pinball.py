@@ -186,7 +186,8 @@ if __name__ == '__main__':
             initial_velocity = random_unit_vector()
 
         result = run_trial(circles, circle_radius, initial_velocity)
-    
+        result.append('initial velocity: {}'.format(initial_velocity))
+
         results.append(result)
         # Only retain the bounce records of the 10 bounciest particles.
         if len(results) > 10:
@@ -203,7 +204,7 @@ if __name__ == '__main__':
         sys.stdout.write('\rTrials complete!    ')
         print '\nRelative Frequencies:'
 
-    # determine relative frequencies
+    # report relative frequencies
     for bounce_count in counter:
         print '\t{} bounces: {}%'.format(bounce_count,
                 counter.get(bounce_count)/float(trials)*100)
@@ -213,5 +214,5 @@ if __name__ == '__main__':
         generate_report(args.output, results)
 
     # display the trial with the most bounces.
-    draw_trial(circle_distance, circle_radius, max(results, key=len))
+    draw_trial(circle_distance, circle_radius, max(results, key=len)[:-1])
 
