@@ -56,9 +56,9 @@ def random_unit_vector():
     """Generate a random (evenly distributed) unit vector. Used to seed a 
     particle's velocity.
     """
-    vector = numpy.random.rand(2) # random values in [0.0, 1.0)
-    vector -= array([.5, .5])     # range is now [-0.5, 0.5)
-    return vector/norm(vector)
+    angle = rand()*2*pi
+    return array([cos(angle), sin(angle)])
+
 
 def ordered_unit_vectors(n):
     """A generator that yields n evenly spaced unit vectors."""
@@ -175,7 +175,7 @@ if __name__ == '__main__':
 
     # Run trials
     results = []
-    for i in range(trials):
+    for i in xrange(trials):
         if args.even:
             results.append(run_trial(circles, circle_radius, angles.next()))
         else:
