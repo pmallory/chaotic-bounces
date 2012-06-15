@@ -125,7 +125,27 @@ def draw_trial(circle_distance, circle_radius, collision_list):
 
     turtle.Screen().exitonclick()
 
+def generate_report(filename, results):
+    paths = sorted(results, key=len, reverse=True)[:10]
+
+    report = """Best Bouncers Report:
+    #1:{}
+    #2:{}
+    #3:{}
+    #4:{}
+    #5:{}
+    #6:{}
+    #7:{}
+    #8:{}
+    #9:{}
+    #10:{}
+    """.format(paths[0], paths[1], paths[2], paths[3], paths[4], paths[5], paths[6], paths[7], paths[8], paths[9])
+
+    with open(filename, 'w') as f:
+        f.write(report)
+
 if __name__ == '__main__':
+    # Set command line options
     parser = argparse.ArgumentParser(description='Model a smple chaotic system.')
 
     parser.add_argument('-d', '--distance', type=int, default=6, help='The distance \
@@ -137,17 +157,19 @@ if __name__ == '__main__':
     parser.add_argument('-e', '--even', action='store_true', help='Use evenly \
                         evenly spaced trial velocity. Random velocities used by \
                         default.')
+    parser.add_argument('-o', '--output', type=str, help='Specify a file to \
+                        output a report to.')
 
+    # Set model conditions
     args = parser.parse_args()
-
     circle_distance = args.distance
     circle_radius = args.radius
     trials = args.trials
     if args.even:
         angles = ordered_unit_vectors(trials)
-
     circles = arrange_circles(circle_distance)
 
+    # Run trials
     results = []
     for i in range(trials):
         if args.even:
@@ -158,13 +180,18 @@ if __name__ == '__main__':
         sys.stdout.flush()
     else:
         sys.stdout.write('\rTrials complete!    ')
-        print '\nReport:'
+        print '\nRelative Frequencies:'
 
+    # determine relative frequencies
     c = Counter([len(r)-1 for r in results])
-
     for bounce_count in c:
         print '\t{} bounces: {}%'.format(bounce_count,
                                        c.get(bounce_count)/float(trials)*100)
 
+    # write report to output.
+    generate_report(args.output, results)
+
+    # display the trial with the most bounces.
     draw_trial(circle_distance, circle_radius, max(results, key=len))
+
 
