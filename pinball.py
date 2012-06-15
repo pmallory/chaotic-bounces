@@ -126,6 +126,10 @@ def draw_trial(circle_distance, circle_radius, collision_list):
     turtle.Screen().exitonclick()
 
 def generate_report(filename, results):
+    """Write out the reflection pts of the ten bounciest particles."""
+    if len(results) < 10:
+        return
+
     paths = sorted(results, key=len, reverse=True)[:10]
 
     report = """Best Bouncers Report:
@@ -193,5 +197,4 @@ if __name__ == '__main__':
 
     # display the trial with the most bounces.
     draw_trial(circle_distance, circle_radius, max(results, key=len))
-
 
