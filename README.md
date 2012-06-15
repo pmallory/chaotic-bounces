@@ -16,7 +16,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -d DISTANCE, --distance DISTANCE
                         The distance between the circles
- -r RADIUS, --radius RADIUS
+  -r RADIUS, --radius RADIUS
                         The radius of each circle
   -t TRIALS, --trials TRIALS
                         How many trials should be run

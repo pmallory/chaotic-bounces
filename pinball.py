@@ -67,6 +67,13 @@ def ordered_unit_vectors(n):
         yield array([cos(angle), sin(angle)])
 
 def run_trial(circles, circle_radius, initial_velocity=None):
+    """Determine the path of a bouncing particle.
+
+    circles: a list of the center points of the circles
+    circle_radius: the radii of the circles
+    initial_velocity: the initial velocity of the particle. if None, a random
+                      unit vector is used
+    """
     particle_position = array([0,0])
     if initial_velocity is not None:
         particle_velocity = initial_velocity
