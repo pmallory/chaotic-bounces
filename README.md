@@ -11,6 +11,7 @@ Usage
 
 usage: pinball.py [-h] [-d DISTANCE] [-r RADIUS] [-t TRIALS] [-e]
 
+<pre>
 optional arguments:
   -h, --help            show this help message and exit
   -d DISTANCE, --distance DISTANCE
@@ -21,4 +22,4 @@ optional arguments:
                         How many trials should be run
   -e, --even            Use evenly evenly spaced trial velocity. Random
                         velocities used by default.
-
+</pre>
