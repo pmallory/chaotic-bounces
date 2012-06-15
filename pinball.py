@@ -1,6 +1,6 @@
 import sys
 import argparse
-from collections import Counter
+from collections import defaultdict 
 
 import numpy
 from scipy import *
@@ -150,7 +150,7 @@ def generate_report(filename, results):
 
 if __name__ == '__main__':
     # Set command line options
-    parser = argparse.ArgumentParser(description='Model a smple chaotic system.')
+    parser = argparse.ArgumentParser(description='Model a simple chaotic system.')
 
     parser.add_argument('-d', '--distance', type=int, default=6, help='The distance \
                         between the circles')
@@ -173,25 +173,40 @@ if __name__ == '__main__':
         angles = ordered_unit_vectors(trials)
     circles = arrange_circles(circle_distance)
 
-    # Run trials
+    # retain the reflection points of the 10 trials with the most bounces
     results = []
+    # count the frequencies of the bounce counts
+    counter = defaultdict(int)
+
+    # Run tials
     for i in xrange(trials):
         if args.even:
-            results.append(run_trial(circles, circle_radius, angles.next()))
+            initial_velocity =  angles.next()
         else:
             initial_velocity = random_unit_vector()
-            results.append(run_trial(circles, circle_radius, initial_velocity))
+
+        result = run_trial(circles, circle_radius, initial_velocity)
+    
+        results.append(result)
+        # Only retain the bounce records of the 10 bounciest particles.
+        if len(results) > 10:
+            results.remove(min(results, key=len))
+
+        # count how many times this number of bounces has happened
+        counter[len(result)-1] += 1
+
+        # progress indicator
         sys.stdout.write('\r{0}% complete'.format(100*i/float(trials)))
         sys.stdout.flush()
     else:
+        # overwrite progess indicator after the loop
         sys.stdout.write('\rTrials complete!    ')
         print '\nRelative Frequencies:'
 
     # determine relative frequencies
-    c = Counter([len(r)-1 for r in results])
-    for bounce_count in c:
+    for bounce_count in counter:
         print '\t{} bounces: {}%'.format(bounce_count,
-                                       c.get(bounce_count)/float(trials)*100)
+                counter.get(bounce_count)/float(trials)*100)
 
     # write report to output.
     if args.output:
