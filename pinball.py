@@ -67,7 +67,7 @@ def ordered_unit_vectors(n):
     for angle in arange(0, 2*pi, increment_size):
         yield array([cos(angle), sin(angle)])
 
-def run_trial(circles, circle_radius, initial_velocity=None):
+def run_trial(circles, circle_radius, initial_velocity):
     """Determine the path of a bouncing particle.
 
     circles: a list of the center points of the circles
@@ -76,15 +76,15 @@ def run_trial(circles, circle_radius, initial_velocity=None):
                       unit vector is used
     """
     particle_position = array([0,0])
-    if initial_velocity is not None:
-        particle_velocity = initial_velocity
-    else:
-        particle_velocity = random_unit_vector()
+    particle_velocity = initial_velocity
 
-    collision_list = [(particle_position, particle_velocity)]
+    collision_list = [particle_position]
     
     # the previously collided with circle. Don't check for collisions with it.
     prev_circ = None
+
+    # we don't need to reevaluate this reference on every iteration 
+    append_method = collision_list.append
 
     while True:
         for circle in filter(lambda c: c!=prev_circ, circles):
@@ -95,7 +95,7 @@ def run_trial(circles, circle_radius, initial_velocity=None):
                 new_velocity = reflect(circle, new_position, particle_velocity)
                 particle_position = new_position
                 particle_velocity = new_velocity
-                collision_list.append((new_position, new_velocity))
+                append_method(new_position)
                 prev_circ = circle
             else:
                 return collision_list
@@ -117,11 +117,11 @@ def draw_trial(circle_distance, circle_radius, collision_list):
         turtle.dot(2*circle_radius*40)
 
     # draw the particle's path
-    turtle.setpos(collision_list[0][0])
+    turtle.setpos(collision_list[0])
     turtle.pendown()
 
     for n in collision_list:
-        turtle.setpos(n[0]*40)
+        turtle.setpos(n*40)
 
     turtle.Screen().exitonclick()
 
@@ -179,7 +179,8 @@ if __name__ == '__main__':
         if args.even:
             results.append(run_trial(circles, circle_radius, angles.next()))
         else:
-            results.append(run_trial(circles, circle_radius))
+            initial_velocity = random_unit_vector()
+            results.append(run_trial(circles, circle_radius, initial_velocity))
         sys.stdout.write('\r{0}% complete'.format(100*i/float(trials)))
         sys.stdout.flush()
     else:
@@ -193,7 +194,8 @@ if __name__ == '__main__':
                                        c.get(bounce_count)/float(trials)*100)
 
     # write report to output.
-    generate_report(args.output, results)
+    if args.output:
+        generate_report(args.output, results)
 
     # display the trial with the most bounces.
     draw_trial(circle_distance, circle_radius, max(results, key=len))
