@@ -9,9 +9,9 @@ The system:
 Usage
 =====
 
+<pre>
 usage: pinball.py [-h] [-d DISTANCE] [-r RADIUS] [-t TRIALS] [-e]
 
-<pre>
 optional arguments:
   -h, --help            show this help message and exit
   -d DISTANCE, --distance DISTANCE
