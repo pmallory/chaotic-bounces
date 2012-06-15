@@ -1,5 +1,6 @@
 import sys
 import argparse
+from collections import Counter
 
 import numpy
 from scipy import *
@@ -155,8 +156,15 @@ if __name__ == '__main__':
             results.append(run_trial(circles, circle_radius))
         sys.stdout.write('\r{0}% complete'.format(100*i/float(trials)))
         sys.stdout.flush()
+    else:
+        sys.stdout.write('\rTrials complete!    ')
+        print '\nReport:'
 
-    sys.stdout.write('\r100% complete!\n')
+    c = Counter([len(r)-1 for r in results])
+
+    for bounce_count in c:
+        print '\t{} bounces: {}%'.format(bounce_count,
+                                       c.get(bounce_count)/float(trials)*100)
 
     draw_trial(circle_distance, circle_radius, max(results, key=len))
 
