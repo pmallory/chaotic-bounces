@@ -65,7 +65,7 @@ def ordered_unit_vectors(n):
 
 def run_trial(circles, circle_radius, initial_velocity=None):
     particle_position = array([0,0])
-    if initial_velocity:
+    if initial_velocity is not None:
         particle_velocity = initial_velocity
     else:
         particle_velocity = random_unit_vector()
