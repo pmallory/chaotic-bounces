@@ -24,7 +24,7 @@ def intersect(center, radius, particle_location, particle_velocity):
     if intermediate_value <= 0:
         return 
 
-    D = square(intermediate_value) - dot((center-particle_location), (center-particle_location)) + radius**2
+    D = square(intermediate_value) - dot((center-particle_location), (center-particle_location)) + square(radius)
 
     if D <= 0:
         return
@@ -56,7 +56,7 @@ def random_unit_vector():
     """Generate a random (evenly distributed) unit vector. Used to seed a 
     particle's velocity.
     """
-    angle = numpy.random.uniform(0, 2*pi) 
+    angle = numpy.random.uniform(0, 2*pi)
     return array([cos(angle), sin(angle)])
 
 
@@ -97,8 +97,10 @@ def run_trial(circles, circle_radius, initial_velocity):
                 particle_velocity = new_velocity
                 append_method(new_position)
                 prev_circ = circle
-            else:
-                return collision_list
+        if not t:
+            break
+
+    return collision_list
 
 def draw_trial(circle_distance, circle_radius, collision_list):
     """Display a graphical representation of a trial.
@@ -184,7 +186,7 @@ if __name__ == '__main__':
             initial_velocity =  angles.next()
         else:
             initial_velocity = random_unit_vector()
-
+    
         result = run_trial(circles, circle_radius, initial_velocity)
         result.append('initial velocity: {}'.format(initial_velocity))
 
@@ -213,6 +215,6 @@ if __name__ == '__main__':
     if args.output:
         generate_report(args.output, results)
 
-    # display the trial with the most bounces.
+    # display the trial with the most bounces
     draw_trial(circle_distance, circle_radius, max(results, key=len)[:-1])
 
